@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Docket Audit Server</title>
+<link href="assets/css/bootstrap.min.css" rel="stylesheet"></link>
+<link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet"></link>
+<link href="assets/css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet"></link>
+<link href="assets/css/plugins/timeline/timeline.css" rel="stylesheet"></link>
+<link href="assets/css/sb-admin.css" rel="stylesheet"></link>
+<link href="assets/css/alertify.core.css" rel="stylesheet"></link>
+<link href="assets/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet"></link>
+<link href="assets/css/datepicker.css" rel="stylesheet"></link>
+</head>
+
+<body>
+	<div id="wrapper">
+
+		<nav class="navbar navbar-default navbar-fixed-top" role="navigation"
+			style="margin-bottom: 0;background-color: #1E5799;">
+      <div class="navbar-header">
+      	<button type="button" class="navbar-toggle" data-toggle="collapse"
+      		data-target=".sidebar-collapse">
+      		<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span>
+      		<span class="icon-bar"></span> <span class="icon-bar"></span>
+      	</button>
+      	<a class="navbar-brand"  href="${pageContext.request.contextPath}" id="home" style="color:white;">Docket - Audit Server <sup>1.0</sup></a>
+      </div>
+
+      <ul class="nav navbar-top-links navbar-right" style="margin-top: 15px;margin-right: 69px;width: 18%;">
+      <input type="text" class="form-control" id="topNoOfRecords" placeholder="Set top no of records for timeline...">
+      					<span class="input-group-btn" >
+      						<button class="btn btn-default" type="button" id="goBtn" style=" margin-bottom: 12px;margin-left: 231px;margin-top: -34px; color: #357EBD;">
+      							Go
+      						</button>
+      					</span>
+      </ul>
+			<!-- /.navbar-top-links -->
+
+      <div class="navbar-default navbar-static-side" role="navigation" style="margin-top: 5%;overflow: scroll;height:600px;">
+      	<form action="submit" name="dockerBean" method="get"
+      		id="dockerBean">
+      		<div class="sidebar-collapse">
+      			<ul class="nav" id="side-menu">
+      				<li class="sidebar-search">
+      					<div class="input-group custom-search-form">
+      						<div class="checkbox">
+      							<label> <input type="checkbox" checked="checked"
+      								id="immediatefetchcheckId">Immediate Fetch
+      							</label>
+      							<label>
+      								<button type="button" class="btn btn-primary" id="submitBtn">Apply</button>
+      							</label>
+      						</div>
+      					</div> <!-- /input-group -->
+      				</li>
+      				<li><a href="${pageContext.request.contextPath}"><i
+      						class="fa fa-home fa-fw"></i> Docket - Audit Server</a></li>
+      				<li><a href="#"><i class="fa fa-th-list fa-fw"></i>
+      						Applications<span class="fa arrow"></span></a>
+      					<ul class="nav nav-second-level">
+      						<li><select class="form-control" id="applicationChange"
+      								name="application">
+      								<option value="" selected="selected">Select</option>
+      								<c:forEach items="${applications}" var="application">
+      									<option value="${application}">${application}</option>
+      								</c:forEach>
+      							</select></li>
+      					</ul> <!-- /.nav-second-level --></li>
+      				<li><a href="#"><i class="fa fa-arrow-circle-o-down fa-fw"></i> Sources<span
+      						class="fa arrow"></span></a>
+      					<ul class="nav nav-second-level">
+      						<li><select class="form-control" id="sourceChange"
+      								name="source">
+      								<option value="" selected="selected">Select</option>
+      								<c:forEach items="${sources}" var="source">
+      									<option value="${source}">${source}</option>
+      								</c:forEach>
+      							</select></li>
+
+
+      					</ul> <!-- /.nav-second-level --></li>
+      				<li><a href="#"><i class="fa fa-sitemap fa-fw"></i> Ip
+      						Address<span class="fa arrow"></span></a>
+      					<ul class="nav nav-second-level">
+      						<li><select class="form-control" id="ipChange" name="ip">
+      								<option value="" selected="selected">Select</option>
+      								<c:forEach items="${ipList}" var="ip">
+      									<option value="${ip}">${ip}</option>
+      								</c:forEach>
+      							</select></li>
+
+      					</ul> <!-- /.nav-second-level --></li>
+      				<li><a href="#"><i class="fa fa-warning fa-fw"></i> Levels<span
+      						class="fa arrow"></span></a>
+      					<ul class="nav nav-second-level">
+
+      						<li><select class="form-control" id="levelChange"
+      								name="level">
+      								<option value="" selected="selected">Select</option>
+      								<c:forEach items="${levels}" var="level">
+      									<option value="${level}">${level}</option>
+      								</c:forEach>
+      							</select></li>
+
+      					</ul></li>
+      				<li><a href="#"><i class="fa fa-calendar fa-fw"></i> Date
+      						Filter<span class="fa arrow"></span></a>
+      					<ul class="nav nav-second-level">
+      						<li> <label style="margin-left:10px;">From Date:</label>
+      							<div class="form-group">
+      								<div class='input-group date' id='fromDatePicker'
+      									data-date-format="DD-MM-YYYY">
+      									<input type='text' class="form-control" name="fromDate"  id="fromDate" placeholder="DD-MMM-YYYY"/>
+      																		<span class="input-group-addon"><span
+      										class="glyphicon-calendar glyphicon"></span> </span>
+      								</div>
+      							</div>
+
+      						</li>
+      						<li><label style="margin-left:10px;">To Date:</label>
+      							<div class="form-group">
+      								<div class='input-group date' id='toDatePicker'
+      									data-date-format="DD-MM-YYYY">
+      									<input type='text' class="form-control" name="toDate" id="toDate" placeholder="DD-MM-YYYY"/>
+      									<span class="input-group-addon"><span
+      										class="glyphicon-calendar glyphicon"></span> </span>
+      								</div>
+      							</div>
+      						</li>
+
+      					</ul> <!-- /.nav-second-level --></li>
+      				<li><a href="#"><i class="fa fa-user fa-fw"></i> User Name<span
+      						class="fa arrow"></span></a>
+      					<ul class="nav nav-second-level">
+
+      						<li><select class="form-control" id="createdUserChange"
+      								name="createdUser">
+      								<option value="" selected="selected">Select</option>
+      								<c:forEach items="${createdUsers}" var="username">
+      									<option value="${username}">${username}</option>
+      								</c:forEach>
+      							</select></li>
+
+      					</ul></li>
+      				<li><a href="#"><i class="fa fa-tasks fa-fw"></i> Event Status<span
+      						class="fa arrow"></span></a>
+      					<ul class="nav nav-second-level">
+
+      						<li><select class="form-control" id="statusDataChange"
+      								name="status">
+      								<option value="" selected="selected">Select</option>
+      								<c:forEach items="${status}" var="statusData">
+      									<option value="${statusData}">${statusData}</option>
+      								</c:forEach>
+      							</select></li>
+
+      					</ul></li>
+
+      			</ul>
+      			<div class="customer-logo"></div>
+      			</br>
+
+
+      			<!-- /#side-menu -->
+      		</div>
+      		<!-- /.sidebar-collapse -->
+      	</form>
+
+      </div>
+			<!-- /.navbar-static-side -->
+		</nav>
+
+		<div id="page-wrapper">
+			<div class="row">
+				<div class="col-lg-12">
+					<h1 class="page-header">Docker Report</h1>
+				</div>
+				<!-- /.col-lg-12 -->
+			</div>
+			<!-- /.row -->
+			<div class="row">
+				<div class="col-lg-12">
+					<!-- /.panel -->
+					<div class="panel panel-default">
+						<!-- /.panel-heading -->
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-lg-12">
+
+									<div class="table-responsive" id="docket_table_div">
+
+									</div>
+									<!-- /.table-responsive -->
+								</div>
+								<!-- /.col-lg-4 (nested) -->
+								<div id="refreshLabel" style="margin-left:87%;color:#1E5799;"></div>
+								<div class="col-lg-12" id="timeLineData">
+									<!-- /.panel Timeline -->
+									<div class="panel panel-default">
+
+										<!-- /.panel-heading -->
+										<div class="panel-body">
+											<ul class="timeline">
+
+													<li class="${status.index%2==0?'':'timeline-inverted'}"
+														data-toggle="modal" data-target="#timemodel"
+														onclick="showRowDetailsTimeLine('${docker.dockerId}');">
+
+
+														<div class="timeline-panel">
+															<div class="timeline-heading">
+																<h4 class="timeline-title"></h4>
+																<p>
+																	<small class="text-muted"><i class="fa fa-time"></i>
+																		Time : <fmt:formatDate dateStyle="medium" timeStyle="medium" type="both"  /></small>
+																</p>
+															</div>
+															<div class="timeline-body">
+														
+															</div>
+														</div>
+													</li>
+												</c:forEach>
+											</ul>
+										</div>
+										<!-- /.panel-body -->
+									</div>
+									<!-- /.panel Timeline-->
+								</div>
+								<!-- /.col-lg-8 (nested) -->
+							</div>
+							<!-- /.row -->
+						</div>
+						<!-- /.panel-body -->
+					</div>
+					<!-- /.panel -->
+
+				</div>
+				<!-- /.col-lg-8 -->
+			</div>
+			<!-- /.row -->
+		</div>
+		<!-- /#page-wrapper -->
+
+		<!-- Modal -->
+		<div class="modal fade" id="timemodel" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel" aria-hidden="true">
+
+			<div class="modal-dialog"
+				style="margin-left: 10%; margin-right: 0; width: 80%;">
+
+				<div class="modal-content">
+					<!-- <div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true">&times;</button>
+						<h4 class="modal-title" id="myModalLabel">Audit Details</h4>
+					</div> -->
+					<div class="modal-body" id="docket_event_details"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+
+
+
+	</div>
+	<!-- /#wrapper -->
+
+	<!-- Core Scripts - Include with every page -->
+	<script
+		src="assets/js/jquery-1.10.2.js"></script>
+	<script
+		src="assets/js/bootstrap.min.js"></script>
+	<script
+		src="assets/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+
+	<!-- Page-Level Plugin Scripts - Dashboard -->
+	<script
+		src="assets/js/plugins/morris/raphael-2.1.0.min.js"></script>
+	<script
+		src="assets/js/plugins/morris/morris.js"></script>
+
+	<!-- SB Admin Scripts - Include with every page -->
+	<script
+		src="assets/js/sb-admin.js"></script>
+
+	<!-- Page-Level Demo Scripts - Dashboard - Use for reference -->
+	<!-- <script
+		src="assets/js/demo/dashboard-demo.js"></script> -->
+		<script
+		src="assets/js/alertify.min.js"></script>
+
+    <script src="assets/js/moment.js"></script>
+    <script
+    	src="assets/js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript">
+    	$('#fromDatePicker').datetimepicker();
+    	$('#toDatePicker').datetimepicker();
+    </script>
+
+</body>
+</html>
